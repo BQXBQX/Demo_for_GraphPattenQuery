@@ -1,11 +1,14 @@
 import "./App.css";
-import { Button } from "./components/ui/button";
+import { FlowArea } from "./components/flowArea";
+// import { Sidebar } from "./components/sidebar";
 
 function App() {
   return (
-    <>
-      <Button>hello</Button>
-    </>
+    <div className="flex w-full h-full">
+      <FlowArea></FlowArea>
+      {/* <div id="divider" className="h-full bg-gray-400 w-px"></div> */}
+      {/* <Sidebar></Sidebar> */}
+    </div>
   );
 }
 

@@ -2,7 +2,10 @@ import { useCallback } from "react";
 import ReactFlow, {
   Background,
   Connection,
+  Controls,
   Edge,
+  EdgeTypes,
+  MarkerType,
   addEdge,
   useEdgesState,
   useNodesState,
@@ -12,9 +15,23 @@ import "reactflow/dist/style.css";
 import initialNodes from "./nodes.ts";
 import initialEdges from "./edges.ts";
 import { CustomNode } from "../customNode/index.tsx";
+import { FloatingEdge } from "../floatingEdge/index.tsx";
 
 const nodeTypes = {
   custom: CustomNode,
+};
+
+const edgeTypes = {
+  floating: FloatingEdge,
+};
+
+const defaultEdgeOptions = {
+  style: { strokeWidth: 3, stroke: "black" },
+  type: "floating",
+  markerEnd: {
+    type: MarkerType.ArrowClosed,
+    color: "black",
+  },
 };
 
 export const FlowArea = () => {
@@ -34,9 +51,13 @@ export const FlowArea = () => {
       onEdgesChange={onEdgesChange}
       onConnect={onConnect}
       nodeTypes={nodeTypes}
+      defaultEdgeOptions={defaultEdgeOptions}
+      edgeTypes={edgeTypes as unknown as EdgeTypes}
       className="flex-grow"
+      fitView
     >
       <Background></Background>
+      <Controls></Controls>
     </ReactFlow>
   );
 };

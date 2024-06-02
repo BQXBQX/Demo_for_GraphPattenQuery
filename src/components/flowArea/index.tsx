@@ -1,12 +1,11 @@
 import { useCallback } from "react";
 import ReactFlow, {
   Background,
-  Connection,
   Controls,
   Edge,
   EdgeTypes,
   MarkerType,
-  addEdge,
+  OnConnect,
   useEdgesState,
   useNodesState,
 } from "reactflow";
@@ -40,8 +39,10 @@ export const FlowArea = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback(
-    (connection: Edge | Connection) =>
-      setEdges((eds: Edge[]) => addEdge(connection, eds)),
+    (connection: Edge) => {
+      connection.id = String(Math.floor(Math.random() * 100000) + 1);
+      setEdges((eds: Edge[]) => [...eds, connection]);
+    },
     [setEdges]
   );
   return (
@@ -50,7 +51,7 @@ export const FlowArea = () => {
       edges={edges}
       onNodesChange={onNodesChange}
       onEdgesChange={onEdgesChange}
-      onConnect={onConnect}
+      onConnect={onConnect as OnConnect}
       nodeTypes={nodeTypes}
       defaultEdgeOptions={defaultEdgeOptions}
       edgeTypes={edgeTypes as unknown as EdgeTypes}

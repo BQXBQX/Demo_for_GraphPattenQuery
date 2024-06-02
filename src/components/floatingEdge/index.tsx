@@ -1,5 +1,7 @@
 import { getEdgeParams } from "@/lib/edge";
-import React, { CSSProperties, useCallback } from "react";
+import { isEqual } from "@/lib/isEqual";
+import { useEdgesGroupStore } from "@/stores/useEdgesGroupStore";
+import React, { CSSProperties, useCallback, useEffect, useState } from "react";
 import { ReactFlowState, getStraightPath, useStore } from "reactflow";
 
 interface FloatingEdgeProps {
@@ -17,6 +19,19 @@ export const FloatingEdge: React.FC<FloatingEdgeProps> = ({
   markerEnd,
   style,
 }) => {
+  const edgesGroups = useEdgesGroupStore((state) => state.edgesGroups);
+  const [edgeIndex, setEdgeIndex] = useState<number>();
+
+  useEffect(() => {
+    const groupIndex = edgesGroups.findIndex((group) =>
+      isEqual(group.relateNode, [source, target])
+    );
+    const newEdgeIndex = edgesGroups[groupIndex].content.findIndex(
+      (edge) => edge.id === id
+    );
+    setEdgeIndex(newEdgeIndex);
+  }, [edgesGroups, source, target, id]);
+
   const sourceNode = useStore(
     useCallback(
       (store: ReactFlowState) => store.nodeInternals.get(source),
@@ -44,12 +59,15 @@ export const FloatingEdge: React.FC<FloatingEdgeProps> = ({
   });
 
   return (
-    <path
-      id={id}
-      className="react-flow__edge-path"
-      d={edgePath}
-      markerEnd={markerEnd}
-      style={style}
-    />
+    <>
+      {edgeIndex}
+      <path
+        id={id}
+        className="react-flow__edge-path"
+        d={edgePath}
+        markerEnd={markerEnd}
+        style={style}
+      />
+    </>
   );
 };

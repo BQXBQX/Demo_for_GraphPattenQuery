@@ -3,7 +3,6 @@ import { Handle, Position, ReactFlowState, useStore } from "reactflow";
 
 const connectionNodeIdSelector = (state: ReactFlowState) =>
   state.connectionNodeId;
-const edgeSelector = (state: ReactFlowState) => state.edges;
 
 interface CustomNodeProps {
   id: string;
@@ -13,9 +12,7 @@ interface CustomNodeProps {
 export const CustomNode: React.FC<CustomNodeProps> = memo(
   ({ id, isConnectable }) => {
     const connectionNodeId = useStore(connectionNodeIdSelector);
-    const edges = useStore(edgeSelector);
-    console.log(edges);
-    
+
     const isTarget = connectionNodeId && connectionNodeId !== id;
 
     return (

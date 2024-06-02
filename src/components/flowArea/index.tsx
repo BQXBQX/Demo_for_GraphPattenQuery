@@ -15,6 +15,7 @@ import initialNodes from "./nodes.ts";
 import initialEdges from "./edges.ts";
 import { CustomNode } from "../customNode/index.tsx";
 import { FloatingEdge } from "../floatingEdge/index.tsx";
+import { useEdgesGroupStore } from "@/stores/useEdgesGroupStore.ts";
 
 const nodeTypes = {
   custom: CustomNode,
@@ -37,14 +38,18 @@ export const FlowArea = () => {
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const [nodes, _, onNodesChange] = useNodesState(initialNodes);
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+  const addEdge = useEdgesGroupStore((state) => state.addEdge);
 
   const onConnect = useCallback(
     (connection: Edge) => {
-      connection.id = String(Math.floor(Math.random() * 100000) + 1);
+      //TODO: 这里暂时用随机数替代ID， 以后用具体的source和target和key 组成ID
+      connection.id = String(Math.floor(Math.random() * 100000000) + 1);
+      addEdge([connection.source, connection.target], connection);
       setEdges((eds: Edge[]) => [...eds, connection]);
     },
-    [setEdges]
+    [setEdges, addEdge]
   );
+
   return (
     <ReactFlow
       nodes={nodes}
